@@ -49,7 +49,11 @@ namespace StarWars
                 //.AddType<ReviewSubscriptions>()
                 .AddType<Human>()
                 .AddType<Droid>()
-                .AddType<Starship>();
+                .AddType<Starship>()
+                //Now Required in v11 to support the Attribute Usage (e.g. you may see the
+                //  error: No filter convention found for scope `none`
+                .AddFiltering()
+                .AddSorting();
 
             //Finally Initialize AzureFunctions Executor Proxy here...
             //You man Provide a specific SchemaName for multiple Functions (e.g. endpoints).

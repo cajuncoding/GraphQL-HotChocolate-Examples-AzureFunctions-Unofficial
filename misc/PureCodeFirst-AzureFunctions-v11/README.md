@@ -49,8 +49,16 @@ and then defaulting back to GET requests, and erroring out if neither are able t
         services.AddAzureFunctionsGraphQL();
 ```
 
-Dependency Inject the new **IGraphQLAzureFunctionsExecutorProxy** into the Function Endpoint:
+  * Note: The namespace for this new middleware and proxy classes as needed is:
 ```csharp
+using HotChocolate.AzureFunctions
+```
+
+2. Dependency Inject the new **IGraphQLAzureFunctionsExecutorProxy** into the Function Endpoint:
+```csharp
+using HotChocolate.AzureFunctions
+using....
+
 public class StarWarsFunctionEndpoint
 {
     private readonly IGraphQLAzureFunctionsExecutorProxy _graphqlExecutorProxy;
@@ -61,7 +69,7 @@ public class StarWarsFunctionEndpoint
     }
 ```
 
-Finally, the **IGraphQLAzureFunctionsExecutorProxy** can be invoked in the AzureFunction invocation:
+3. Finally, the **IGraphQLAzureFunctionsExecutorProxy** can be invoked in the AzureFunction invocation:
 ```csharp
         [FunctionName(nameof(StarWarsFunctionEndpoint))]
         public async Task<IActionResult> Run(
