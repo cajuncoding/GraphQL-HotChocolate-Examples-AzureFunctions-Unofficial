@@ -7,6 +7,7 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Diagnostics;
 using System.Net;
+using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -70,8 +71,12 @@ namespace HotChocolate.AzureFunctions
                 IErrorHandler errorHandler = await this.AzureFunctionsMiddlewareProxy.GetErrorHandlerAsync(cancellationToken);
                 IError error = errorHandler.CreateUnexpectedError(exc).Build();
                 IQueryResult errorResult = QueryResultBuilder.CreateError(error);
+                
+                HttpStatusCode statusCode = exc is HttpRequestException 
+                    ? HttpStatusCode.BadRequest 
+                    : HttpStatusCode.InternalServerError;
 
-                await HandleGraphQLErrorResponseAsync(httpContext, HttpStatusCode.InternalServerError, errorResult);
+                await HandleGraphQLErrorResponseAsync(httpContext, statusCode, errorResult);
             }
 
             //Safely resolve the .Net Core request with Empty Result because the Response has already been handled!

@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Http;
 using System.Net;
 using System.Threading;
 using Microsoft.Extensions.DependencyInjection;
+using System.Net.Http;
 
 namespace HotChocolate.AzureFunctions
 {
@@ -53,7 +54,9 @@ namespace HotChocolate.AzureFunctions
             //NOTE: Middleware uses the Pipeline Pattern (similar to Chain Of Responsibility), therefore
             //  we adapt that here to manually build up the two key middleware handlers for Http Get & Http Post processing.
             var httpGetMiddlewareShim = new HttpGetMiddleware(
-                (httpContext) => throw new NotImplementedException("GraphQL GET processing via Azure Functions is not implemented yet."),
+                (httpContext) => throw new HttpRequestException(
+                    "GraphQL was unable to process the request, ensure that an Http POST or GET GraphQL request was sent as well-formed Json."
+                ),
                 this.ExecutorResolver,
                 this.ResultSerializer,
                 this.RequestParser,
